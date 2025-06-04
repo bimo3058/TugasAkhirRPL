@@ -12,7 +12,7 @@ const dbConfig = {
   host: 'localhost',
   user: 'root',
   password: '', // Ganti jika kamu pakai password MySQL
-  database: 'sehari-app',
+  database: 'sehari',
 };
 
 // Middleware
