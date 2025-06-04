@@ -23,37 +23,38 @@ const Newlogin = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/auth/signup`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    let data = null;
     try {
-      data = await res.json();
-    } catch (err) {
-      console.error('Failed to parse JSON:', err);
-    }
+      const res = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    if (!res.ok) {
-      const message = data?.message || `Sign up failed with status ${res.status}`;
-      console.error('Server response:', data);
-      alert("Sign up failed: " + message);
-      return;
-    }
+      let data = null;
+      try {
+        data = await res.json();
+      } catch (err) {
+        console.error("Failed to parse JSON:", err);
+      }
 
-    navigate("/new");
-  } catch (error) {
-    console.error('Network error:', error);
-    alert("Error connecting to server: " + error.message);
-  }
-};
+      if (!res.ok) {
+        const message =
+          data?.message || `Sign up failed with status ${res.status}`;
+        console.error("Server response:", data);
+        alert("Sign up failed: " + message);
+        return;
+      }
+
+      navigate("/new");
+    } catch (error) {
+      console.error("Network error:", error);
+      alert("Error connecting to server: " + error.message);
+    }
+  };
 
   const handleSign = (e) => {
     e.preventDefault();
@@ -82,8 +83,8 @@ const Newlogin = () => {
             <input
               name="username"
               type="text"
+              autoComplete="off"
               required
-              placeholder="Name"
               value={formData.username}
               onChange={handleChange}
               className="w-full h-10 bg-transparent border-none outline-none text-base text-white px-2.5 peer"
@@ -97,9 +98,9 @@ const Newlogin = () => {
           <div className="relative border-b-2 border-white/30 my-5 group">
             <input
               name="email"
-              type="email"
+              type="text"
               required
-              placeholder="Email"
+              autoComplete="off"
               value={formData.email}
               onChange={handleChange}
               className="w-full h-10 bg-transparent border-none outline-none text-base text-white px-2.5 peer"
@@ -114,7 +115,7 @@ const Newlogin = () => {
             <input
               name="password"
               type={showPassword ? "text" : "password"}
-              placeholder="Password"
+              autoComplete="off"
               value={formData.password}
               required
               onChange={handleChange}
