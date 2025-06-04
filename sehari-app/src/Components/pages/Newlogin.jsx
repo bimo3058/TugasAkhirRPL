@@ -63,7 +63,8 @@ const Newlogin = () => {
           
           <div className="input-field">
             <input 
-              type="email" 
+              type="text"
+              autoComplete="off" 
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -73,7 +74,8 @@ const Newlogin = () => {
           </div>
           <div className="input-field">
             <input 
-              type="password" 
+              type="password"
+              autoComplete="off" 
               name="password"
               value={formData.password}
               onChange={handleChange}
