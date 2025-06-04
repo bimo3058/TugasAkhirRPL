@@ -57,7 +57,7 @@ const Newlogin = () => {
 
   const handleSign = (e) => {
     e.preventDefault();
-    navigate("/login");
+    navigate("/new");
   };
 
   return (

@@ -12,7 +12,7 @@ const Newlogin = () => {
   
   const handleSign = (e) => {
     e.preventDefault(); 
-    navigate('/sign'); 
+    navigate('/'); 
   };
 
   const handleChange = (e) => {
@@ -45,7 +45,7 @@ const Newlogin = () => {
       console.log('Login success:', data.user);
       
       // Redirect ke home setelah login sukses
-      navigate('/home'); 
+      navigate('/dash'); 
     } catch (err) {
       setError(err.message);
       console.error('Login error:', err);
