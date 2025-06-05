@@ -1,25 +1,27 @@
 // server.js
-import express from 'express';
-import mysql from 'mysql2/promise'; // Gunakan versi promise
-import cors from 'cors';
-import bcrypt from 'bcryptjs'; // 🔧 Tambahkan bcryptjs
+import express from "express";
+import mysql from "mysql2/promise"; // Gunakan versi promise
+import cors from "cors";
+import bcrypt from "bcryptjs"; // 🔧 Tambahkan bcryptjs
 
 const app = express();
 const saltRounds = 10;
 
 // Konfigurasi database
 const dbConfig = {
-  host: 'localhost',
-  user: 'root',
-  password: '', // Ganti jika kamu pakai password MySQL
-  database: 'sehari',
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "sehari",
 };
 
 // Middleware
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Koneksi pool ke database
@@ -137,10 +139,59 @@ app.post('/api/tasks', async (req, res) => {
 // Ambil semua task
 app.get('/api/tasks', async (req, res) => {
   try {
-    const [tasks] = await pool.query('SELECT * FROM tasks ORDER BY created_at DESC');
+    const [tasks] = await pool.query(
+      "SELECT * FROM tasks ORDER BY created_at DESC"
+    );
     res.json(tasks);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch tasks', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch tasks", error: error.message });
+  }
+});
+
+// Update task (edit atau ubah status)
+app.put("/api/tasks/:id", async (req, res) => {
+  const { id } = req.params;
+  const { text, time, category, status, section, color } = req.body;
+
+  try {
+    const [result] = await pool.query(
+      `UPDATE tasks SET 
+        text = ?, 
+        time = ?, 
+        category = ?, 
+        status = ?, 
+        section = ?, 
+        color = ?
+      WHERE id = ?`,
+      [text, time, category, status, section, color, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+
+    res.json({ message: "Task updated", id });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to update task", error: error.message });
+  }
+});
+
+app.delete("/api/tasks/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [result] = await pool.query("DELETE FROM tasks WHERE id = ?", [id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    res.json({ message: "Task deleted" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to delete task", error: error.message });
   }
 });
 
