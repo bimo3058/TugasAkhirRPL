@@ -125,7 +125,7 @@ const Newlogin = () => {
               Enter your password
             </label>
             <span
-              className="mr-2 text-2xl cursor-pointer"
+              className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-white text-xl"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
