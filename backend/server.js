@@ -120,6 +120,30 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
+// Simpan task
+app.post('/api/tasks', async (req, res) => {
+  const { text, time, category, status, section, color } = req.body;
+  try {
+    const [result] = await pool.query(
+      'INSERT INTO tasks (text, time, category, status, section, color, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())',
+      [text, time, category, status, section, color]
+    );
+    res.status(201).json({ message: 'Task created', id: result.insertId });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to save task', error: error.message });
+  }
+});
+
+// Ambil semua task
+app.get('/api/tasks', async (req, res) => {
+  try {
+    const [tasks] = await pool.query('SELECT * FROM tasks ORDER BY created_at DESC');
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch tasks', error: error.message });
+  }
+});
+
 // Server listen tanpa endpoint
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
