@@ -600,8 +600,19 @@ function Dash() {
         section: activeSection,
         color: randomColor,
       };
-      setTasks([...tasks, task]);
-      setNewTask("");
+      fetch("http://localhost:5000/api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(task),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const taskWithId = { ...task, id: data.id.toString() }; // pastikan string!
+          setTasks((prev) => [...prev, taskWithId]);
+          setNewTask("");
+        });
     }
   };
 
