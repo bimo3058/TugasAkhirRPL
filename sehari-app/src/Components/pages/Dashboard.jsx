@@ -570,7 +570,14 @@ function Dash() {
   useEffect(() => {
     fetch("http://localhost:5000/api/tasks")
       .then((res) => res.json())
-      .then((data) => setTasks(data))
+      .then((data) => {
+        // Pastikan setiap task punya id string
+        const fixedTasks = data.map((task, index) => ({
+          ...task,
+          id: task.id?.toString() || index.toString(), // fallback
+        }));
+        setTasks(fixedTasks);
+      })
       .catch((err) => console.error("Error fetching tasks:", err));
   }, []);
 
