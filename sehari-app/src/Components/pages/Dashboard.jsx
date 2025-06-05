@@ -571,10 +571,9 @@ function Dash() {
     fetch("http://localhost:5000/api/tasks")
       .then((res) => res.json())
       .then((data) => {
-        // Pastikan setiap task punya id string
         const fixedTasks = data.map((task, index) => ({
           ...task,
-          id: task.id?.toString() || index.toString(), // fallback
+          id: task.id?.toString() || index.toString(),
         }));
         setTasks(fixedTasks);
       })
@@ -599,7 +598,7 @@ function Dash() {
         category: newTaskCategory,
         status: "Upcoming",
         section: activeSection,
-        color: randomColor,
+        color: randomColor,
       };
       setTasks([...tasks, task]);
       setNewTask("");
