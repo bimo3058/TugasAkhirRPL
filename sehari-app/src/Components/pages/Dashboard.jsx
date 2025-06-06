@@ -188,52 +188,45 @@ function Dash() {
   const onDragEnd = (result) => {
     const { source, destination } = result;
     if (!destination) return;
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    )
-      return;
 
-    if (source.droppableId === destination.droppableId) {
-      const status = source.droppableId;
-      const filtered = tasks.filter((t) => t.status === status);
-      const rest = tasks.filter((t) => t.status !== status);
+    const sourceStatus = source.droppableId;
+    const destStatus = destination.droppableId;
 
-      const [removed] = filtered.splice(source.index, 1);
-      filtered.splice(destination.index, 0, removed);
+    const sourceList = tasksByStatus(sourceStatus);
+    const destList =
+      sourceStatus === destStatus ? sourceList : tasksByStatus(destStatus);
 
-      setTasks([...rest, ...filtered]);
+    const [movedTask] = sourceList.splice(source.index, 1);
+    movedTask.status = destStatus;
+
+    if (sourceStatus === destStatus) {
+      destList.splice(destination.index, 0, movedTask);
     } else {
-      const sourceStatus = source.droppableId;
-      const destStatus = destination.droppableId;
-
-      const sourceTasks = tasks.filter((t) => t.status === sourceStatus);
-      const destTasks = tasks.filter((t) => t.status === destStatus);
-      const rest = tasks.filter(
-        (t) => t.status !== sourceStatus && t.status !== destStatus
-      );
-
-      const [moved] = sourceTasks.splice(source.index, 1);
-      moved.status = destStatus;
-
-      // Simpan perubahan ke DB
-      fetch(`http://localhost:5000/api/tasks/${moved.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(moved),
-      })
-        .then((res) => res.json())
-        .then(() => {
-          console.log("Status updated in DB");
-        })
-        .catch((err) => {
-          console.error("Gagal update status task:", err);
-        });
-
-      destTasks.splice(destination.index, 0, moved);
-
-      setTasks([...rest, ...sourceTasks, ...destTasks]);
+      destList.splice(destination.index, 0, movedTask);
     }
+
+    const newTasks = tasks.map((task) => {
+      if (task.id === movedTask.id) {
+        return movedTask;
+      }
+      return task;
+    });
+
+    setTasks(newTasks);
+
+    // Simpan ke DB
+    fetch(`http://localhost:5000/api/tasks/${movedTask.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(movedTask),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        console.log("✅ Status updated in DB");
+      })
+      .catch((err) => {
+        console.error("❌ Gagal update status task:", err);
+      });
   };
 
   const filteredTasks = tasks.filter((task) => {
