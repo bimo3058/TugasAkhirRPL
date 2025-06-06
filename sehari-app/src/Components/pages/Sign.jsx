@@ -49,7 +49,7 @@ const Newlogin = () => {
         return;
       }
 
-      navigate("/new");
+      navigate("/");
     } catch (error) {
       console.error("Network error:", error);
       alert("Error connecting to server: " + error.message);
@@ -58,7 +58,7 @@ const Newlogin = () => {
 
   const handleSign = (e) => {
     e.preventDefault();
-    navigate("/new");
+    navigate("/");
   };
 
   return (
