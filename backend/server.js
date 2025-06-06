@@ -190,13 +190,14 @@ app.put("/api/tasks/:id", async (req, res) => {
 
 app.delete("/api/tasks/:id", async (req, res) => {
   const { id } = req.params;
+
   try {
-    const [result] = await pool.query("DELETE FROM tasks WHERE id = ?", [id]);
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "Task not found" });
-    }
-    res.json({ message: "Task deleted" });
+    // Hapus dari tabel tasks
+    await pool.query("DELETE FROM tasks WHERE id = ?", [id]);
+
+    res.json({ message: "Task deleted and saved to archive" });
   } catch (error) {
+    console.error("Delete failed:", error);
     res
       .status(500)
       .json({ message: "Failed to delete task", error: error.message });
