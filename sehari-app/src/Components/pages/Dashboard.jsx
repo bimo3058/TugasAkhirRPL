@@ -143,11 +143,25 @@ function Dash() {
   };
 
   const updateTaskStatus = (id, newStatus) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, status: newStatus } : task
-      )
-    );
+    const taskToUpdate = tasks.find((task) => task.id === id);
+    if (!taskToUpdate) return;
+
+    const updatedTask = { ...taskToUpdate, status: newStatus };
+
+    fetch(`http://localhost:5000/api/tasks/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedTask),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setTasks((prev) =>
+          prev.map((task) => (task.id === id ? updatedTask : task))
+        );
+      })
+      .catch((err) => {
+        console.error("Gagal update status:", err);
+      });
   };
 
   const updateTaskColor = (id, newColor) => {
@@ -201,6 +215,21 @@ function Dash() {
 
       const [moved] = sourceTasks.splice(source.index, 1);
       moved.status = destStatus;
+
+      // Simpan perubahan ke DB
+      fetch(`http://localhost:5000/api/tasks/${moved.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(moved),
+      })
+        .then((res) => res.json())
+        .then(() => {
+          console.log("Status updated in DB");
+        })
+        .catch((err) => {
+          console.error("Gagal update status task:", err);
+        });
+
       destTasks.splice(destination.index, 0, moved);
 
       setTasks([...rest, ...sourceTasks, ...destTasks]);
