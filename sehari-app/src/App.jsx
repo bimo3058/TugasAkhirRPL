@@ -1,8 +1,13 @@
-import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
-import SignPage from '../src/Components/pages/Sign.jsx';
-import HomePage from '../src/Components/pages/Dashboard.jsx';
-import NewLogin from '../src/Components/pages/Newlogin.jsx';
-import React from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import SignPage from "../src/Components/pages/Sign.jsx";
+import HomePage from "../src/Components/pages/Dashboard.jsx";
+import NewLogin from "../src/Components/pages/Newlogin.jsx";
+import React from "react";
 
 function App() {
   return (
@@ -10,8 +15,8 @@ function App() {
       <div className="h-fit">
         <Routes>
           {/* <Route path="/" element={<Navigate to="/sign" replace />} /> */}
-          <Route path="/" element={<SignPage />} />
-          <Route path="/new" element={<NewLogin />} />
+          <Route path="/sign" element={<SignPage />} />
+          <Route path="/" element={<NewLogin />} />
           <Route path="/dash" element={<HomePage />} />
         </Routes>
       </div>
@@ -19,5 +24,4 @@ function App() {
   );
 }
 
-export default App;
-
+export default App;
