@@ -33,13 +33,7 @@ function Dash() {
   const menuRef = useRef(null);
 
   const [wallpapers] = useState([
-    {
-      id: 1,
-      name: "Default",
-      image: relax,
-      thumbnailClass: "bg-[#191919]",
-      darkText: true,
-    },
+
     {
       id: 2,
       name: "Space",
@@ -47,6 +41,14 @@ function Dash() {
       thumbnailClass: "bg-gray-800",
       darkText: true,
     },
+    {
+      id: 3,
+      name: "Hill",
+      image: relax,
+      thumbnailClass: "bg-gray-800",
+      darkText: true,
+    },
+    
   ]);
 
    const [selectedWallpaper, setSelectedWallpaper] = useState(wallpapers[0]);
