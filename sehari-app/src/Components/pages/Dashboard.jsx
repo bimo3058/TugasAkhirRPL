@@ -49,7 +49,7 @@ function Dash() {
     },
   ]);
 
-  const [selectedWallpaper, setSelectedWallpaper] = useState(wallpapers[0]);
+   const [selectedWallpaper, setSelectedWallpaper] = useState(wallpapers[0]);
   const isImageBackground = !!selectedWallpaper.image;
 
   const sections = ["General Tasks", "My Schedule", "Work", "Important"];
@@ -166,13 +166,6 @@ function Dash() {
       });
   };
 
-  const updateTaskColor = (id, newColor) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, color: newColor } : task
-      )
-    );
-  };
 
   const removeTask = (id) => {
     fetch(`http://localhost:5000/api/tasks/${id}`, {
