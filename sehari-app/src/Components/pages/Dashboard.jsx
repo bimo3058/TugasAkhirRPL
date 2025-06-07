@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import amazing from "../images/Space.jpg";
+import relax from "../images/bg2.jpg";
 import React from "react";
 
 function useClickOutside(ref, callback) {
@@ -35,8 +36,9 @@ function Dash() {
     {
       id: 1,
       name: "Default",
-      class: "bg-[#191919]",
+      image: relax,
       thumbnailClass: "bg-[#191919]",
+      darkText: true,
     },
     {
       id: 2,
