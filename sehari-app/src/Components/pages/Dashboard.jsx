@@ -34,12 +34,6 @@ function Dash() {
   const [wallpapers] = useState([
     {
       id: 1,
-      name: "Default",
-      class: "bg-[#191919]",
-      thumbnailClass: "bg-[#191919]",
-    },
-    {
-      id: 2,
       name: "Space",
       image: amazing,
       thumbnailClass: "bg-gray-800",
