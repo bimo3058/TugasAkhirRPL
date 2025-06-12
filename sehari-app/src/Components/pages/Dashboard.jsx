@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import amazing from "../images/Space.jpg";
+import relax from "../images/bg2.jpg";
 import React from "react";
 
 function useClickOutside(ref, callback) {
@@ -32,16 +33,25 @@ function Dash() {
   const menuRef = useRef(null);
 
   const [wallpapers] = useState([
+
     {
-      id: 1,
+      id: 2,
       name: "Space",
       image: amazing,
       thumbnailClass: "bg-gray-800",
       darkText: true,
     },
+    {
+      id: 3,
+      name: "Hill",
+      image: relax,
+      thumbnailClass: "bg-gray-800",
+      darkText: true,
+    },
+    
   ]);
 
-  const [selectedWallpaper, setSelectedWallpaper] = useState(wallpapers[0]);
+   const [selectedWallpaper, setSelectedWallpaper] = useState(wallpapers[0]);
   const isImageBackground = !!selectedWallpaper.image;
 
   const sections = ["General Tasks", "My Schedule", "Work", "Important"];
@@ -158,13 +168,6 @@ function Dash() {
       });
   };
 
-  const updateTaskColor = (id, newColor) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, color: newColor } : task
-      )
-    );
-  };
 
   const removeTask = (id) => {
     fetch(`http://localhost:5000/api/tasks/${id}`, {
