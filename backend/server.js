@@ -117,7 +117,11 @@ app.post("/api/auth/login", async (req, res) => {
 
     res.status(200).json({
       message: "Login successful",
-      user: userData,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
     });
   } catch (error) {
     console.error("Login error:", error);
@@ -126,6 +130,33 @@ app.post("/api/auth/login", async (req, res) => {
       error: error.message,
     });
   }
+});
+
+//Endpoint Log out
+app.post("/api/auth/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) return res.status(500).json({ message: "Logout failed" });
+    res.clearCookie("connect.sid"); // jika pakai express-session
+    res.json({ message: "Logged out" });
+  });
+});
+
+// Endpoint Profil
+app.get("/api/user/profile", (req, res) => {
+  const userId = req.session.userId;
+  if (!userId) return res.status(401).json({ message: "Unauthorized" });
+
+  db.query(
+    "SELECT username FROM users WHERE id = ?",
+    [userId],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (result.length === 0)
+        return res.status(404).json({ message: "User not found" });
+
+      res.json({ username: result[0].username });
+    }
+  );
 });
 
 // Simpan task

@@ -41,10 +41,11 @@ const Newlogin = () => {
         throw new Error(data.message || "Login failed");
       }
 
-      // Simpan user data ke state/context/redux jika perlu
-      console.log("Login success:", data.user);
+      // Simpan ke localStorage
+      localStorage.setItem("userId", data.user.id);
+      localStorage.setItem("username", data.user.username);
 
-      // Redirect ke home setelah login sukses
+      // Redirect ke dashboard
       navigate("/dash");
     } catch (err) {
       setError(err.message);

@@ -26,14 +26,14 @@ function Dash() {
   const [activeSection, setActiveSection] = useState("General Tasks");
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTaskId, setActiveTaskId] = useState(null);
-
   const [editMode, setEditMode] = useState(false);
   const [currentEditTask, setCurrentEditTask] = useState(null);
-
   const menuRef = useRef(null);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const profileRef = useRef(null);
+  const [username, setUsername] = useState("User");
 
   const [wallpapers] = useState([
-
     {
       id: 2,
       name: "Space",
@@ -48,10 +48,9 @@ function Dash() {
       thumbnailClass: "bg-gray-800",
       darkText: true,
     },
-    
   ]);
 
-   const [selectedWallpaper, setSelectedWallpaper] = useState(wallpapers[0]);
+  const [selectedWallpaper, setSelectedWallpaper] = useState(wallpapers[0]);
   const isImageBackground = !!selectedWallpaper.image;
 
   const sections = ["General Tasks", "My Schedule", "Work", "Important"];
@@ -69,6 +68,16 @@ function Dash() {
   useClickOutside(menuRef, () => {
     setActiveTaskId(null);
   });
+
+  // Tutup dropdown jika klik di luar
+  useClickOutside(profileRef, () => setShowProfileDropdown(false));
+  // Fetch username dari backend
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("username");
+    if (savedUsername) {
+      setUsername(savedUsername);
+    }
+  }, []);
 
   // ⬇ Fetch tasks from backend saat load
   useEffect(() => {
@@ -168,7 +177,6 @@ function Dash() {
       });
   };
 
-
   const removeTask = (id) => {
     fetch(`http://localhost:5000/api/tasks/${id}`, {
       method: "DELETE",
@@ -249,11 +257,52 @@ function Dash() {
 
   return (
     <div className="max-h-screen">
-      <header className="bg-[#202020] text-white p-4 shadow-lg h-[56px]">
+      <header className="bg-[#202020] text-white p-4 shadow-lg h-[56px] flex items-center justify-between">
         <h1 className="text-xl font-bold">
           Upcoming Today Task:{" "}
           {tasksByStatus("Upcoming")[0]?.text || "No upcoming tasks"}
         </h1>
+
+        <div className="relative" ref={profileRef}>
+          <button
+            onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+            className="text-white hover:text-gray-300 text-lg font-medium"
+          >
+            {username}{" "}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="inline w-4 h-4 ml-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+
+          {showProfileDropdown && (
+            <div className="absolute right-0 mt-2 w-40 bg-[#3b3b3b] rounded-md shadow-lg z-30">
+              <button className="w-full text-left px-4 py-2 hover:bg-[#4c4c4c] text-white">
+                Profile
+              </button>
+              <button
+                onClick={() => {
+                  localStorage.removeItem("username");
+                  localStorage.removeItem("userId");
+                  window.location.href = "/";
+                }}
+                className="w-full text-left px-4 py-2 hover:bg-[#4c4c4c] text-white"
+              >
+                Log Out
+              </button>
+            </div>
+          )}
+        </div>
       </header>
 
       <div className="flex flex-col md:flex-row h-[calc(100vh-56px)]">
